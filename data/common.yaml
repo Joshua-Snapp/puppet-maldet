@@ -79,7 +79,6 @@ maldet::new_config:
   inotify_verbose: false
   string_length_scan: false
   string_length: 150000
-maldet::cron_config: {}
 maldet::cleanup_old_install: true
 maldet::manage_epel: true
 

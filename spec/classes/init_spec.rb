@@ -18,7 +18,7 @@ describe 'maldet' do
       end
 
       describe 'maldet::install' do
-        let(:params) {{ :version => '1.5',
+        let(:params) {{ :version => '1.6',
                         :mirror_url => 'https://www.rfxn.com/downloads',
                         :package_name => '',
                         :ensure => 'present',
@@ -43,17 +43,16 @@ describe 'maldet' do
 
       describe 'maldet::config' do
         let(:params) {{ :config => {},
-                        :cron_config => {},
                         :version => '1.6',
                         :daily_scan => true }}
-        it { should contain_file('/usr/local/maldetect/conf.maldet').
-             with(:ensure => 'present') }
         it { should contain_file('/usr/local/maldetect/cron/conf.maldet.cron').
              with(:ensure => 'present') }
 
         describe 'do not create conf.maldet.cron on older versions' do
           let(:params) {{ :version => '1.4.2' }}
           it { should_not contain_file('/usr/local/maldetect/cron/conf.maldet.cron').
+               with(:ensure => 'present') }
+          it { should contain_file('/usr/local/maldetect/conf.maldet').
                with(:ensure => 'present') }
         end
       end
