@@ -39,10 +39,13 @@ class maldet (
 ) {
 
   contain maldet::install
-  contain maldet::config
-  contain maldet::service
 
-  Class['maldet::install'] ~>
-  Class['maldet::config'] ~>
-  Class['maldet::service']
+  if $ensure == 'present' {
+    contain maldet::config
+    contain maldet::service
+
+    Class['maldet::install'] ~>
+    Class['maldet::config'] ~>
+    Class['maldet::service']
+  }
 }
