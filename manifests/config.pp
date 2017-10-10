@@ -6,6 +6,7 @@ class maldet::config (
   Array   $ignore_inotify  = $maldet::ignore_inotify,
   Array   $ignore_paths    = $maldet::ignore_paths,
   Array   $ignore_sigs     = $maldet::ignore_sigs,
+  Hash    $cron_config     = $maldet::cron_config,
   String  $version         = $maldet::version,
 ) {
 
@@ -19,15 +20,24 @@ class maldet::config (
     $merged_config = $default_config + $config
   }
 
-  # Allow config overrides for daily cron
   $merged_conf = { 'config' => $merged_config }
+  file { '/usr/local/maldetect/conf.maldet':
+    ensure  => present,
+    mode    => '0644',
+    owner   => root,
+    group   => root,
+    content => epp('maldet/conf.maldet.epp', $merged_conf),
+  }
+
+  # Allow config overrides for daily cron
+  $cron_conf = { 'config' => $cron_config }
   if versioncmp($maldet::version, '1.5') >= 0 {
     file { '/usr/local/maldetect/cron/conf.maldet.cron':
       ensure  => present,
       mode    => '0644',
       owner   => root,
       group   => root,
-      content => epp('maldet/conf.maldet.epp', $merged_conf),
+      content => epp('maldet/conf.maldet.epp', $cron_conf),
     }
   }
   else {
